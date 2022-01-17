@@ -9,6 +9,12 @@ import { RoleModule } from './role/role.module';
 import { OptionModule } from './option/option.module';
 import { ModuleOptionsModule } from './module-options/module-options.module';
 import { AuthModule } from './auth/auth.module';
+import { SupplierModule } from './supplier/supplier.module';
+import { ProductModule } from './product/product.module';
+import { ClientModule } from './client/client.module';
+import { ModelModule } from './model/model.module';
+import { MarkModule } from './mark/mark.module';
+import { UnitMeasureModule } from './unit-measure/unit-measure.module';
 
 @Module({
   imports: [
@@ -23,6 +29,12 @@ import { AuthModule } from './auth/auth.module';
     OptionModule,
     ModuleOptionsModule,
     AuthModule,
+    SupplierModule,
+    ProductModule,
+    ClientModule,
+    ModelModule,
+    MarkModule,
+    UnitMeasureModule,
   ],
   controllers: [AppController],
   providers: [AppService],

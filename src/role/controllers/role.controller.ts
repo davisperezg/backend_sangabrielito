@@ -8,9 +8,7 @@ import {
   Post,
   Put,
   Res,
-  UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
 import { Role } from '../schemas/role.schema';
 import { RoleService } from '../services/role.service';
 

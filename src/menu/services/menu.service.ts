@@ -40,6 +40,36 @@ export class MenuService implements OnModuleInit {
           status: true,
           link: 'permisos',
         }).save(),
+        new this.menuModel({
+          name: 'Productos',
+          status: true,
+          link: 'productos',
+        }).save(),
+        new this.menuModel({
+          name: 'Marcas',
+          status: true,
+          link: 'marcas',
+        }).save(),
+        new this.menuModel({
+          name: 'Modelo',
+          status: true,
+          link: 'modelos',
+        }).save(),
+        new this.menuModel({
+          name: 'Unidad de medida',
+          status: true,
+          link: 'unidad-medida',
+        }).save(),
+        new this.menuModel({
+          name: 'Gestion de clientes',
+          status: true,
+          link: 'clientes',
+        }).save(),
+        new this.menuModel({
+          name: 'Proveedores',
+          status: true,
+          link: 'proveedores',
+        }).save(),
       ]);
     } catch (e) {
       throw new Error(`Error en MenuService.onModuleInit ${e}`);

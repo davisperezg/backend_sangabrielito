@@ -1,7 +1,6 @@
 import { Module } from './../../module/schemas/module.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
-import { Option } from 'src/option/schemas/option.schema';
 import { Role } from 'src/role/schemas/role.schema';
 export type ModuleOptionsDocument = ModuleOptions & mongoose.Document;
 
@@ -21,11 +20,6 @@ export class ModuleOptions {
     ref: 'Module',
   })
   module?: Module;
-
-  // @Prop({
-  //   type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Option' }],
-  // })
-  // option?: Option[];
 
   @Prop({ trim: true })
   canCreate: boolean;
