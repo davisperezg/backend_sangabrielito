@@ -27,24 +27,64 @@ export class ModuleService implements OnApplicationBootstrap {
     try {
       //ADD MODULES
 
-      const getMenus = await this.menuService.findbyName([
+      const getMenusADM = await this.menuService.findbyName([
         'Usuarios',
         'Roles',
         'Modulos',
         'Permisos',
       ]);
 
-      const findMenus = getMenus.map((men) => men._id);
+      const getMenusInventario = await this.menuService.findbyName([
+        'Productos',
+        'Marcas',
+        'Modelo',
+        'Unidad de medida',
+      ]);
+
+      const getMenusClient = await this.menuService.findbyName([
+        'Gestion de clientes',
+      ]);
+
+      const getMenusCompras = await this.menuService.findbyName([
+        'Proveedores',
+      ]);
+
+      const getMenusComprobantes = await this.menuService.findbyName([
+        'Realizar ventas',
+      ]);
+
+      const findMenusADM = getMenusADM.map((men) => men._id);
+      const findMenusInventario = getMenusInventario.map((men) => men._id);
+      const findMenusClient = getMenusClient.map((men) => men._id);
+      const findMenusCompras = getMenusCompras.map((men) => men._id);
+      const findMenusComprobantes = getMenusComprobantes.map((men) => men._id);
 
       await Promise.all([
         new this.moduleModel({
           name: 'Administración de sistema',
           status: true,
-          menu: findMenus,
+          menu: findMenusADM,
         }).save(),
-        new this.moduleModel({ name: 'Almacen', status: true }).save(),
-        new this.moduleModel({ name: 'Mantenimiento', status: true }).save(),
-        new this.moduleModel({ name: 'Comprobantes', status: true }).save(),
+        new this.moduleModel({
+          name: 'Inventario',
+          status: true,
+          menu: findMenusInventario,
+        }).save(),
+        new this.moduleModel({
+          name: 'Clientes',
+          status: true,
+          menu: findMenusClient,
+        }).save(),
+        new this.moduleModel({
+          name: 'Compras',
+          status: true,
+          menu: findMenusCompras,
+        }).save(),
+        new this.moduleModel({
+          name: 'Comprobantes',
+          status: true,
+          menu: findMenusComprobantes,
+        }).save(),
         new this.moduleModel({
           name: 'Consultas y Reportes',
           status: true,
@@ -55,8 +95,9 @@ export class ModuleService implements OnApplicationBootstrap {
 
       const getModules = await this.findbyNames([
         'Administración de sistema',
-        'Almacen',
-        'Mantenimiento',
+        'Clientes',
+        'Inventario',
+        'Compras',
         'Comprobantes',
         'Consultas y Reportes',
       ]);

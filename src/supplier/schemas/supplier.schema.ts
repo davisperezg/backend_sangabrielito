@@ -19,7 +19,7 @@ export class Supplier {
   @Prop({ trim: true, unique: true, required: true })
   cellphone: string;
 
-  @Prop({ trim: true, unique: true })
+  @Prop({ trim: true })
   email: string;
 
   @Prop({ trim: true })

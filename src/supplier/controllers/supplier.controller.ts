@@ -12,7 +12,7 @@ import {
 import { Supplier } from '../schemas/supplier.schema';
 import { SupplierService } from '../services/supplier.service';
 
-@Controller('api/v1/supplier')
+@Controller('api/v1/suppliers')
 export class SupplierController {
   constructor(private readonly supplierService: SupplierService) {}
 

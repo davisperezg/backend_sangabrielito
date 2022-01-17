@@ -12,7 +12,7 @@ import {
 import { Client } from '../schemas/client.schema';
 import { ClientService } from '../services/client.service';
 
-@Controller('api/v1/client')
+@Controller('api/v1/clients')
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 

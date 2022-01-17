@@ -70,6 +70,11 @@ export class MenuService implements OnModuleInit {
           status: true,
           link: 'proveedores',
         }).save(),
+        new this.menuModel({
+          name: 'Realizar ventas',
+          status: true,
+          link: 'ventas',
+        }).save(),
       ]);
     } catch (e) {
       throw new Error(`Error en MenuService.onModuleInit ${e}`);
