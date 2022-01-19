@@ -57,9 +57,12 @@ export class UserService implements OnApplicationBootstrap {
 
   //Add a single user
   async create(createUser: User): Promise<User> {
-    const { name, role, password } = createUser;
+    const { nroDocument, email, username, role, password } = createUser;
 
     //const findModule = await this.userModel.findOne({ name });
+    const findNro = await this.userModel.findOne({ nroDocument });
+    const findEmail = await this.userModel.findOne({ email });
+    const findUsername = await this.userModel.findOne({ username });
 
     if (!role) {
       //Si rol no existe
@@ -72,6 +75,43 @@ export class UserService implements OnApplicationBootstrap {
         HttpStatus.CONFLICT,
       );
     }
+
+    if (findNro) {
+      //Si rol no existe
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          type: 'UNIQUE',
+          message: 'El nro de documento ya existe.',
+        },
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    if (findEmail) {
+      //Si rol no existe
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          type: 'UNIQUE',
+          message: 'El correo ya existe.',
+        },
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    if (findUsername) {
+      //Si rol no existe
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          type: 'UNIQUE',
+          message: 'El usuario ya existe.',
+        },
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const passwordHashed = await hashPassword(password);
 
     const getRole = await this.roleService.findRoleByName(String(role));
@@ -103,7 +143,7 @@ export class UserService implements OnApplicationBootstrap {
 
   //Put a single user
   async update(id: string, bodyUser: User): Promise<User> {
-    const { status, role } = bodyUser;
+    const { nroDocument, email, username, status, role } = bodyUser;
 
     if (status) {
       throw new HttpException(
@@ -113,6 +153,46 @@ export class UserService implements OnApplicationBootstrap {
           message: 'Unauthorized Exception',
         },
         HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const findNro = await this.userModel.findOne({ nroDocument });
+    const findEmail = await this.userModel.findOne({ email });
+    const findUsername = await this.userModel.findOne({ username });
+
+    if (findNro && findNro._id.toString() !== id.toString()) {
+      //Si rol no existe
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          type: 'UNIQUE',
+          message: 'El nro de documento ya existe.',
+        },
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    if (findEmail && findEmail._id.toString() !== id.toString()) {
+      //Si rol no existe
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          type: 'UNIQUE',
+          message: 'El correo ya existe.',
+        },
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    if (findUsername && findUsername._id.toString() !== id.toString()) {
+      //Si rol no existe
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          type: 'UNIQUE',
+          message: 'El usuario ya existe.',
+        },
+        HttpStatus.CONFLICT,
       );
     }
 

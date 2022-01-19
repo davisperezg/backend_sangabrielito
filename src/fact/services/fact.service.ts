@@ -1,25 +1,25 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { MdelDocument, Mdel } from '../schemas/model.schema';
+import { Fact, FactDocument } from '../schemas/fact.schema';
 
 @Injectable()
-export class ModelService {
-  constructor(@InjectModel('Mdel') private modModel: Model<MdelDocument>) {}
+export class FactService {
+  constructor(@InjectModel('Fact') private factModel: Model<FactDocument>) {}
 
-  async findAll(): Promise<Mdel[]> {
-    return this.modModel.find({ status: true });
+  async findAll(): Promise<Fact[]> {
+    return this.factModel.find({ status: true });
   }
 
-  async findAllDeleted(): Promise<Mdel[]> {
-    return this.modModel.find({ status: false });
+  async findAllDeleted(): Promise<Fact[]> {
+    return this.factModel.find({ status: false });
   }
 
   async restore(id: string): Promise<boolean> {
     let result = false;
 
     try {
-      await this.modModel.findByIdAndUpdate(id, { status: true });
+      await this.factModel.findByIdAndUpdate(id, { status: true });
       result = true;
     } catch (e) {
       //throw new Error(`Error en ProductService.deleteProductById ${e}`);
@@ -32,7 +32,7 @@ export class ModelService {
     let result = false;
 
     try {
-      await this.modModel.findByIdAndUpdate(id, { status: false });
+      await this.factModel.findByIdAndUpdate(id, { status: false });
       result = true;
     } catch (e) {
       //throw new Error(`Error en ProductService.deleteProductById ${e}`);
@@ -41,12 +41,12 @@ export class ModelService {
     return result;
   }
 
-  async create(createMdel: Mdel): Promise<Mdel> {
-    const { name } = createMdel;
+  async create(createFact: Fact): Promise<Fact> {
+    const { cod_fact } = createFact;
 
-    const findMdel = await this.modModel.findOne({ name });
+    const findFact = await this.factModel.findOne({ cod_fact });
 
-    if (findMdel) {
+    if (findFact) {
       //No se puede crear el elemento
       throw new HttpException(
         {
@@ -58,17 +58,17 @@ export class ModelService {
       );
     }
 
-    const modifyData: Mdel = {
-      ...createMdel,
+    const modifyData: Fact = {
+      ...createFact,
       status: true,
     };
 
-    const createdMdel = new this.modModel(modifyData);
-    return createdMdel.save();
+    const createdModule = new this.factModel(modifyData);
+    return createdModule.save();
   }
 
-  async update(id: string, bodyModel: Mdel): Promise<Mdel> {
-    const { status } = bodyModel;
+  async update(id: string, bodyFact: Fact): Promise<Fact> {
+    const { status } = bodyFact;
 
     if (status) {
       throw new HttpException(
@@ -81,12 +81,12 @@ export class ModelService {
       );
     }
 
-    return await this.modModel.findByIdAndUpdate(id, bodyModel, {
+    return await this.factModel.findByIdAndUpdate(id, bodyFact, {
       new: true,
     });
   }
 
-  async findModelByName(model: string): Promise<MdelDocument> {
-    return await this.modModel.findOne({ name: model });
+  async findFactByName(fact: string): Promise<FactDocument> {
+    return await this.factModel.findOne({ name: fact });
   }
 }

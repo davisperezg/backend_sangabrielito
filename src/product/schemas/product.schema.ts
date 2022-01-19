@@ -1,13 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Mark } from 'src/mark/schemas/mark.schemas';
-import { ModelE } from 'src/model/schemas/model.schema';
+import { Mdel } from 'src/model/schemas/model.schema';
 import { Unit } from 'src/unit-measure/schemas/unit.schema';
 export type ProductDocument = Product & mongoose.Document;
 
 @Schema({ timestamps: true, versionKey: false })
 export class Product {
-  @Prop({ trim: true })
+  @Prop({ trim: true, uppercase: true, required: true })
   cod_internal: string;
 
   @Prop({ trim: true, uppercase: true, required: true })
@@ -25,10 +25,10 @@ export class Product {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ModelE',
+    ref: 'Mdel',
     required: true,
   })
-  model: ModelE;
+  model: Mdel;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

@@ -14,19 +14,19 @@ export class User {
   @Prop({ trim: true, requerid: true, uppercase: true })
   tipDocument: string;
 
-  @Prop({ trim: true, requerid: true, unique: true })
+  @Prop({ trim: true, requerid: true, unique: true, uppercase: true })
   nroDocument: string;
 
-  @Prop({ trim: true, requerid: true, unique: true })
+  @Prop({ trim: true, requerid: true, unique: true, uppercase: true })
   email: string;
 
-  @Prop({ trim: true })
+  @Prop({ trim: true, requerid: true, unique: true, lowercase: true })
   username: string;
 
-  @Prop({ trim: true })
+  @Prop({ trim: true, requerid: true })
   password: string;
 
-  @Prop({ trim: true })
+  @Prop({ trim: true, requerid: true })
   status: boolean;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Role', required: true })

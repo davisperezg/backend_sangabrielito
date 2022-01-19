@@ -13,7 +13,7 @@ export class Client {
   @Prop({ trim: true, requerid: true, uppercase: true })
   tipDocument: string;
 
-  @Prop({ trim: true, requerid: true, unique: true })
+  @Prop({ trim: true, requerid: true, unique: true, uppercase: true })
   nroDocument: string;
 
   @Prop({ trim: true })
@@ -25,7 +25,7 @@ export class Client {
   @Prop({ trim: true })
   address: string;
 
-  @Prop({ trim: true })
+  @Prop({ trim: true, requerid: true })
   status: boolean;
 }
 

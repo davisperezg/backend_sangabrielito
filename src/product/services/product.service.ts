@@ -117,4 +117,8 @@ export class ProductService {
       new: true,
     });
   }
+
+  async findProductByName(product: string): Promise<ProductDocument> {
+    return await this.productModel.findOne({ name: product });
+  }
 }

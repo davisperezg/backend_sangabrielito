@@ -9,7 +9,7 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
-import { ModelE } from '../schemas/model.schema';
+import { Mdel } from '../schemas/model.schema';
 import { ModelService } from '../services/model.service';
 
 @Controller('api/v1/models')
@@ -17,51 +17,51 @@ export class ModelController {
   constructor(private readonly modelService: ModelService) {}
 
   @Get()
-  getModelEs() {
+  getMdels() {
     return this.modelService.findAll();
   }
 
   @Get('/removes')
-  getModelEsRemoves() {
+  getMdelsRemoves() {
     return this.modelService.findAllDeleted();
   }
 
   @Post()
-  async createModelE(@Res() res, @Body() createBody: ModelE): Promise<ModelE> {
+  async createMdel(@Res() res, @Body() createBody: Mdel): Promise<Mdel> {
     const model = await this.modelService.create(createBody);
     return res.status(HttpStatus.OK).json({
-      message: 'ModelE Successfully Created',
+      message: 'Mdel Successfully Created',
       model,
     });
   }
 
   @Delete(':id')
-  async deleteModelE(@Res() res, @Param('id') id: string): Promise<boolean> {
+  async deleteMdel(@Res() res, @Param('id') id: string): Promise<boolean> {
     const modelDeleted = await this.modelService.delete(id);
     return res.status(HttpStatus.OK).json({
-      message: 'ModelE Deleted Successfully',
+      message: 'Mdel Deleted Successfully',
       modelDeleted,
     });
   }
 
   @Put(':id')
-  async updateModelE(
+  async updateMdel(
     @Res() res,
     @Param('id') id: string,
-    @Body() createBody: ModelE,
-  ): Promise<ModelE> {
+    @Body() createBody: Mdel,
+  ): Promise<Mdel> {
     const modelUpdated = await this.modelService.update(id, createBody);
     return res.status(HttpStatus.OK).json({
-      message: 'ModelE Updated Successfully',
+      message: 'Mdel Updated Successfully',
       modelUpdated,
     });
   }
 
   @Put('restore/:id')
-  async restoreModelE(@Res() res, @Param('id') id: string): Promise<ModelE> {
+  async restoreMdel(@Res() res, @Param('id') id: string): Promise<Mdel> {
     const modelRestored = await this.modelService.restore(id);
     return res.status(HttpStatus.OK).json({
-      message: 'ModelE Restored Successfully',
+      message: 'Mdel Restored Successfully',
       modelRestored,
     });
   }

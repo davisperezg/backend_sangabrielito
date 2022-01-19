@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
-export type ModelDocument = ModelE & mongoose.Document;
+export type MdelDocument = Mdel & mongoose.Document;
 
 @Schema({ timestamps: true, versionKey: false })
-export class ModelE {
+export class Mdel {
   @Prop({ trim: true, unique: true, uppercase: true })
   name: string;
 
@@ -11,4 +11,4 @@ export class ModelE {
   status: boolean;
 }
 
-export const ModelESchema = SchemaFactory.createForClass(ModelE);
+export const MdelSchema = SchemaFactory.createForClass(Mdel);

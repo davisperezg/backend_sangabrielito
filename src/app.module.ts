@@ -15,6 +15,8 @@ import { ClientModule } from './client/client.module';
 import { ModelModule } from './model/model.module';
 import { MarkModule } from './mark/mark.module';
 import { UnitMeasureModule } from './unit-measure/unit-measure.module';
+import { FactModule } from './fact/fact.module';
+import { FactDetailsModule } from './fact-details/fact-details.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { UnitMeasureModule } from './unit-measure/unit-measure.module';
     ModelModule,
     MarkModule,
     UnitMeasureModule,
+    FactModule,
+    FactDetailsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
