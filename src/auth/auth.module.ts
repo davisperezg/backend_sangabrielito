@@ -17,12 +17,20 @@ import { MenuService } from 'src/menu/services/menu.service';
 import { ModuleOptionsSchema } from 'src/module-options/schemas/module-options.schema';
 import { OptionSchema } from 'src/option/schemas/option.schema';
 import { OptionService } from 'src/option/services/option.service';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '24h' },
+    JwtModule.registerAsync({
+      useFactory: (config: ConfigService) => {
+        return {
+          secret: config.get<string>('JWT_SECRET_KEY'),
+          signOptions: {
+            expiresIn: config.get<string | number>('JWT_EXPIRE'),
+          },
+        };
+      },
+      inject: [ConfigService],
     }),
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
