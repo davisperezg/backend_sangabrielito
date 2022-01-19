@@ -22,7 +22,7 @@ import { OptionService } from 'src/option/services/option.service';
   imports: [
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '30m' },
+      signOptions: { expiresIn: '24h' },
     }),
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },

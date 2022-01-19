@@ -17,10 +17,16 @@ import { MarkModule } from './mark/mark.module';
 import { UnitMeasureModule } from './unit-measure/unit-measure.module';
 import { FactModule } from './fact/fact.module';
 import { FactDetailsModule } from './fact-details/fact-details.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/sisvilla', {
+    ConfigModule.forRoot({
+      envFilePath: `.${process.env.NODE_ENV}.env`,
+      isGlobal: true,
+      cache: true,
+    }),
+    MongooseModule.forRoot(process.env.URL_DATABASE, {
       useFindAndModify: false,
       useCreateIndex: true,
     }),
