@@ -28,6 +28,12 @@ export class ModuleController {
     return this.moduleService.findAllDeleted();
   }
 
+  // Get one Module by menu
+  @Get('/menu/:name')
+  getModuleByMenu(@Param('name') name: string) {
+    return this.moduleService.findModuleByMenu(name);
+  }
+
   // Add Module
   @Post()
   async createMenu(@Res() res, @Body() createModule: Module): Promise<Module> {

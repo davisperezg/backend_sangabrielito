@@ -32,6 +32,9 @@ export class ModuleOptions {
 
   @Prop({ trim: true })
   canUpdate: boolean;
+
+  @Prop({ trim: true })
+  canRestore: boolean;
 }
 
 export const ModuleOptionsSchema = SchemaFactory.createForClass(ModuleOptions);

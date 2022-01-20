@@ -44,9 +44,9 @@ export class SupplierService {
   }
 
   async create(createSupplier: Supplier): Promise<Supplier> {
-    const { name } = createSupplier;
+    const { cellphone } = createSupplier;
 
-    const findSupplier = await this.supplierModel.findOne({ name });
+    const findSupplier = await this.supplierModel.findOne({ cellphone });
 
     if (findSupplier) {
       //No se puede crear el elemento
@@ -54,7 +54,7 @@ export class SupplierService {
         {
           status: HttpStatus.CONFLICT,
           type: 'UNIQUE',
-          message: 'Item cannot be created',
+          message: 'El celular ya existe.',
         },
         HttpStatus.CONFLICT,
       );
@@ -70,7 +70,7 @@ export class SupplierService {
   }
 
   async update(id: string, bodySupplier: Supplier): Promise<Supplier> {
-    const { status } = bodySupplier;
+    const { status, cellphone } = bodySupplier;
 
     if (status) {
       throw new HttpException(
@@ -80,6 +80,20 @@ export class SupplierService {
           message: 'Unauthorized Exception',
         },
         HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const findSupplier = await this.supplierModel.findOne({ cellphone });
+
+    if (findSupplier && findSupplier._id.toString() !== id.toString()) {
+      //No se puede crear el elemento
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          type: 'UNIQUE',
+          message: 'El celular ya existe.',
+        },
+        HttpStatus.CONFLICT,
       );
     }
 

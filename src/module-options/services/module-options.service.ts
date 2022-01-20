@@ -72,6 +72,7 @@ export class ModuleOptionsService {
       })
       .populate({
         path: 'module',
+        populate: [{ path: 'menu' }],
       });
   }
 

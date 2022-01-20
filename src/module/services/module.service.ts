@@ -140,6 +140,16 @@ export class ModuleService implements OnApplicationBootstrap {
     });
   }
 
+  async findModuleByMenu(menu: string): Promise<Module> {
+    const findMenu = await this.menuService.findOneByName(menu);
+
+    return this.moduleModel
+      .findOne({ status: true, menu: findMenu._id })
+      .populate({
+        path: 'menu',
+      });
+  }
+
   async findAllDeleted(): Promise<Module[]> {
     return this.moduleModel.find({ status: false }).populate({
       path: 'menu',

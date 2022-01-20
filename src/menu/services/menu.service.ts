@@ -133,6 +133,10 @@ export class MenuService implements OnModuleInit {
     return await this.menuModel.find({ name: { $in: name } });
   }
 
+  async findOneByName(link: string): Promise<MenuDocument> {
+    return await this.menuModel.findOne({ link });
+  }
+
   //Restore a single module
   async restore(id: string): Promise<boolean> {
     let result = false;
