@@ -36,6 +36,7 @@ export class ModuleOptionsService {
     };
 
     const createdMO = new this.optionModel(modifyData);
+
     return createdMO.save();
   }
 
