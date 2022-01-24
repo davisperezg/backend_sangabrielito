@@ -17,38 +17,18 @@ export class Fact_DetailsDetailsService {
     private readonly factService: FactService,
   ) {}
 
-  async findAll(): Promise<Fact_Details[]> {
-    return this.detailsModel.find({ status: true });
-  }
-
-  async findAllDeleted(): Promise<Fact_Details[]> {
-    return this.detailsModel.find({ status: false });
-  }
-
-  async restore(id: string): Promise<boolean> {
-    let result = false;
-
-    try {
-      await this.detailsModel.findByIdAndUpdate(id, { status: true });
-      result = true;
-    } catch (e) {
-      //throw new Error(`Error en ProductService.deleteProductById ${e}`);
-    }
-
-    return result;
-  }
-
-  async delete(id: string): Promise<boolean> {
-    let result = false;
-
-    try {
-      await this.detailsModel.findByIdAndUpdate(id, { status: false });
-      result = true;
-    } catch (e) {
-      //throw new Error(`Error en ProductService.deleteProductById ${e}`);
-    }
-
-    return result;
+  async findAll(fact: any): Promise<Fact_Details[]> {
+    return this.detailsModel.find({ fact: fact, status: true }).populate([
+      {
+        path: 'product',
+        populate: [
+          {
+            path: 'unit',
+          },
+        ],
+      },
+      { path: 'fact' },
+    ]);
   }
 
   async create(createFact_Details: Fact_Details): Promise<Fact_Details> {
@@ -65,42 +45,5 @@ export class Fact_DetailsDetailsService {
 
     const createdModule = new this.detailsModel(modifyData);
     return createdModule.save();
-  }
-
-  async update(
-    id: string,
-    bodyFact_Details: Fact_Details,
-  ): Promise<Fact_Details> {
-    const { status, fact, product } = bodyFact_Details;
-
-    if (status) {
-      throw new HttpException(
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          type: 'UNAUTHORIZED',
-          message: 'Unauthorized Exception',
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-
-    const getFact = await this.factService.findFactByCod(Number(fact));
-    const getProduct = await this.productService.findProductByName(
-      String(product),
-    );
-
-    const modifyData: Fact_Details = {
-      ...bodyFact_Details,
-      fact: getFact._id,
-      product: getProduct._id,
-    };
-
-    return await this.detailsModel.findByIdAndUpdate(id, modifyData, {
-      new: true,
-    });
-  }
-
-  async findFact_DetailsByName(details: string): Promise<Fact_DetailsDocument> {
-    return await this.detailsModel.findOne({ name: details });
   }
 }

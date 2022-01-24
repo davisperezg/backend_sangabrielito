@@ -14,11 +14,25 @@ export class FactService {
   ) {}
 
   async findAll(): Promise<Fact[]> {
-    return this.factModel.find({ status: true });
+    return this.factModel.find({ status: true }).populate([
+      {
+        path: 'client',
+      },
+      {
+        path: 'user',
+      },
+    ]);
   }
 
   async findAllDeleted(): Promise<Fact[]> {
-    return this.factModel.find({ status: false });
+    return this.factModel.find({ status: false }).populate([
+      {
+        path: 'client',
+      },
+      {
+        path: 'user',
+      },
+    ]);
   }
 
   async restore(id: string): Promise<boolean> {

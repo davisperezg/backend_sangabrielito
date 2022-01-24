@@ -65,13 +65,4 @@ export class FactController {
       factUpdated,
     });
   }
-
-  @Put('restore/:id')
-  async restoreFact(@Res() res, @Param('id') id: string): Promise<Fact> {
-    const factRestored = await this.factService.restore(id);
-    return res.status(HttpStatus.OK).json({
-      message: 'Fact Restored Successfully',
-      factRestored,
-    });
-  }
 }

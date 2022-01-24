@@ -16,14 +16,9 @@ import { Fact_DetailsDetailsService } from '../services/fact-details.service';
 export class FactDetailsController {
   constructor(private readonly detailsService: Fact_DetailsDetailsService) {}
 
-  @Get()
-  getFactDetailss() {
-    return this.detailsService.findAll();
-  }
-
-  @Get('/removes')
-  getFactDetailssRemoves() {
-    return this.detailsService.findAllDeleted();
+  @Get('/nro/:id')
+  getFactDetailss(@Param('id') fact: string) {
+    return this.detailsService.findAll(fact);
   }
 
   @Post()
@@ -35,43 +30,6 @@ export class FactDetailsController {
     return res.status(HttpStatus.OK).json({
       message: 'FactDetails Successfully Created',
       details,
-    });
-  }
-
-  @Delete(':id')
-  async deleteFactDetails(
-    @Res() res,
-    @Param('id') id: string,
-  ): Promise<boolean> {
-    const detailsDeleted = await this.detailsService.delete(id);
-    return res.status(HttpStatus.OK).json({
-      message: 'FactDetails Deleted Successfully',
-      detailsDeleted,
-    });
-  }
-
-  @Put(':id')
-  async updateFactDetails(
-    @Res() res,
-    @Param('id') id: string,
-    @Body() createBody: Fact_Details,
-  ): Promise<Fact_Details> {
-    const detailsUpdated = await this.detailsService.update(id, createBody);
-    return res.status(HttpStatus.OK).json({
-      message: 'FactDetails Updated Successfully',
-      detailsUpdated,
-    });
-  }
-
-  @Put('restore/:id')
-  async restoreFactDetails(
-    @Res() res,
-    @Param('id') id: string,
-  ): Promise<Fact_Details> {
-    const detailsRestored = await this.detailsService.restore(id);
-    return res.status(HttpStatus.OK).json({
-      message: 'FactDetails Restored Successfully',
-      detailsRestored,
     });
   }
 }
