@@ -54,15 +54,12 @@ export class Fact_DetailsDetailsService {
   async create(createFact_Details: Fact_Details): Promise<Fact_Details> {
     const { fact, product } = createFact_Details;
 
-    const getFact = await this.factService.findFactByName(String(fact));
-    const getProduct = await this.productService.findProductByName(
-      String(product),
-    );
+    const getFact = await this.factService.findFactByCod(Number(fact));
 
     const modifyData: Fact_Details = {
       ...createFact_Details,
       fact: getFact._id,
-      product: getProduct._id,
+      product: product,
       status: true,
     };
 
@@ -87,7 +84,7 @@ export class Fact_DetailsDetailsService {
       );
     }
 
-    const getFact = await this.factService.findFactByName(String(fact));
+    const getFact = await this.factService.findFactByCod(Number(fact));
     const getProduct = await this.productService.findProductByName(
       String(product),
     );

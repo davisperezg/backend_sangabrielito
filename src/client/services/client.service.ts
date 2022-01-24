@@ -124,4 +124,8 @@ export class ClientService implements OnApplicationBootstrap {
       new: true,
     });
   }
+
+  async findClientByNro(nro: string): Promise<ClientDocument> {
+    return await this.clientModel.findOne({ nroDocument: nro });
+  }
 }

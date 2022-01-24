@@ -13,6 +13,8 @@ import { OptionSchema } from 'src/option/schemas/option.schema';
 import { OptionService } from 'src/option/services/option.service';
 import { MenuSchema } from 'src/menu/schemas/menu.schema';
 import { MenuService } from 'src/menu/services/menu.service';
+import { AreaSchema } from 'src/area/schemas/area.schema';
+import { AreaService } from 'src/area/services/area.service';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { MenuService } from 'src/menu/services/menu.service';
       { name: 'Module', schema: ModuleSchema },
       { name: 'Option', schema: OptionSchema },
       { name: 'Menu', schema: MenuSchema },
+      { name: 'Area', schema: AreaSchema },
     ]),
   ],
   controllers: [UserController],
@@ -33,6 +36,7 @@ import { MenuService } from 'src/menu/services/menu.service';
     ModuleService,
     OptionService,
     MenuService,
+    AreaService,
   ],
 })
 export class UserModule {}

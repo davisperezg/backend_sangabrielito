@@ -18,6 +18,8 @@ import { UnitMeasureModule } from './unit-measure/unit-measure.module';
 import { FactModule } from './fact/fact.module';
 import { FactDetailsModule } from './fact-details/fact-details.module';
 import { ConfigModule } from '@nestjs/config';
+import { SequenceModule } from './sequence/sequence.module';
+import { AreaModule } from './area/area.module';
 
 @Module({
   imports: [
@@ -45,6 +47,8 @@ import { ConfigModule } from '@nestjs/config';
     UnitMeasureModule,
     FactModule,
     FactDetailsModule,
+    SequenceModule,
+    AreaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

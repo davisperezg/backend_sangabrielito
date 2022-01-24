@@ -1,3 +1,4 @@
+import { UserDocument } from 'src/user/schemas/user.schema';
 import {
   Body,
   Controller,
@@ -8,10 +9,14 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { CtxUser } from 'src/lib/decorators/ctx-user.decorators';
+import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
 import { Fact } from '../schemas/fact.schema';
 import { FactService } from '../services/fact.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/v1/facts')
 export class FactController {
   constructor(private readonly factService: FactService) {}
@@ -27,8 +32,12 @@ export class FactController {
   }
 
   @Post()
-  async createFact(@Res() res, @Body() createBody: Fact): Promise<Fact> {
-    const fact = await this.factService.create(createBody);
+  async createFact(
+    @Res() res,
+    @Body() createBody: Fact,
+    @CtxUser() user: UserDocument,
+  ): Promise<Fact> {
+    const fact = await this.factService.create(createBody, user);
     return res.status(HttpStatus.OK).json({
       message: 'Fact Successfully Created',
       fact,

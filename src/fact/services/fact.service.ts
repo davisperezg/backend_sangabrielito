@@ -1,11 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ClientService } from 'src/client/services/client.service';
+import { SequenceService } from 'src/sequence/services/sequence.service';
 import { Fact, FactDocument } from '../schemas/fact.schema';
 
 @Injectable()
 export class FactService {
-  constructor(@InjectModel('Fact') private factModel: Model<FactDocument>) {}
+  constructor(
+    @InjectModel('Fact') private factModel: Model<FactDocument>,
+    private readonly sequenceService: SequenceService,
+    private readonly clientService: ClientService,
+  ) {}
 
   async findAll(): Promise<Fact[]> {
     return this.factModel.find({ status: true });
@@ -41,8 +47,8 @@ export class FactService {
     return result;
   }
 
-  async create(createFact: Fact): Promise<Fact> {
-    const { cod_fact } = createFact;
+  async create(createFact: Fact, user: any): Promise<Fact> {
+    const { cod_fact, client } = createFact;
 
     const findFact = await this.factModel.findOne({ cod_fact });
 
@@ -52,16 +58,31 @@ export class FactService {
         {
           status: HttpStatus.CONFLICT,
           type: 'UNIQUE',
-          message: 'Item cannot be created',
+          message:
+            'Ha ocurrido un error, ya existe una venta con el mismo código por favor intente actualizando la página.',
         },
         HttpStatus.CONFLICT,
       );
     }
 
+    //obtiene el cliente
+    const getClient = await this.clientService.findClientByNro(String(client));
+
+    //obtene el cod actual de la fact
+    const getSequence = await this.sequenceService.findSequenceByArea(
+      user.area._id,
+    );
+
     const modifyData: Fact = {
       ...createFact,
+      cod_fact: getSequence.sequence,
+      user: user._id,
+      client: getClient._id,
       status: true,
     };
+
+    //obtiene el ulti cod de fact y actualiza +1
+    await this.sequenceService.getNextSequenceValue(getSequence._id);
 
     const createdModule = new this.factModel(modifyData);
     return createdModule.save();
@@ -86,7 +107,7 @@ export class FactService {
     });
   }
 
-  async findFactByName(fact: string): Promise<FactDocument> {
-    return await this.factModel.findOne({ name: fact });
+  async findFactByCod(fact: number): Promise<FactDocument> {
+    return await this.factModel.findOne({ cod_fact: fact });
   }
 }

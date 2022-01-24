@@ -13,6 +13,8 @@ import { ModuleOptionsSchema } from 'src/module-options/schemas/module-options.s
 import { ModuleOptionsService } from 'src/module-options/services/module-options.service';
 import { OptionSchema } from 'src/option/schemas/option.schema';
 import { OptionService } from 'src/option/services/option.service';
+import { AreaService } from 'src/area/services/area.service';
+import { AreaSchema } from 'src/area/schemas/area.schema';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { OptionService } from 'src/option/services/option.service';
       { name: 'Role', schema: RoleSchema },
       { name: 'ModuleOptions', schema: ModuleOptionsSchema },
       { name: 'Option', schema: OptionSchema },
+      { name: 'Area', schema: AreaSchema },
     ]),
   ],
   controllers: [ModuleController],
@@ -33,6 +36,7 @@ import { OptionService } from 'src/option/services/option.service';
     RoleService,
     ModuleOptionsService,
     OptionService,
+    AreaService,
   ],
 })
 export class ModuleModule {}

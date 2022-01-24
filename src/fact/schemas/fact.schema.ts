@@ -7,7 +7,7 @@ export type FactDocument = Fact & mongoose.Document;
 @Schema({ timestamps: true, versionKey: false })
 export class Fact {
   @Prop({ trim: true, unique: true, uppercase: true })
-  cod_fact: string;
+  cod_fact: number;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -27,7 +27,7 @@ export class Fact {
   payment_type: string; //contado o credito
 
   @Prop({ trim: true, required: true })
-  way_to_pay: string; //efectivo completo, efectivo con vuelto o yape
+  way_to_pay: string; //efectivo completo, efectivo con vuelto, yape, plin
 
   @Prop({ trim: true })
   obs: string;

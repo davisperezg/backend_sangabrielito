@@ -15,32 +15,42 @@ export class ProductService {
     private readonly unitService: UnitMeasureService,
   ) {}
 
-  async findAll(): Promise<Product[]> {
-    return this.productModel.find({ status: true }).populate([
-      {
-        path: 'mark',
-      },
-      {
-        path: 'model',
-      },
-      {
-        path: 'unit',
-      },
-    ]);
+  async findAll(user: any): Promise<Product[]> {
+    return this.productModel
+      .find({ status: true, area: user.area._id })
+      .populate([
+        {
+          path: 'mark',
+        },
+        {
+          path: 'model',
+        },
+        {
+          path: 'unit',
+        },
+        {
+          path: 'area',
+        },
+      ]);
   }
 
-  async findAllDeleted(): Promise<Product[]> {
-    return this.productModel.find({ status: false }).populate([
-      {
-        path: 'mark',
-      },
-      {
-        path: 'model',
-      },
-      {
-        path: 'unit',
-      },
-    ]);
+  async findAllDeleted(user: any): Promise<Product[]> {
+    return this.productModel
+      .find({ status: false, area: user.area._id })
+      .populate([
+        {
+          path: 'mark',
+        },
+        {
+          path: 'model',
+        },
+        {
+          path: 'unit',
+        },
+        {
+          path: 'area',
+        },
+      ]);
   }
 
   async restore(id: string): Promise<boolean> {
@@ -69,18 +79,36 @@ export class ProductService {
     return result;
   }
 
-  async create(createProduct: Product): Promise<Product> {
-    const { mark, model, unit } = createProduct;
+  async create(createProduct: Product, user: any): Promise<Product> {
+    const { mark, model, unit, cod_internal } = createProduct;
+
+    const findCod = await this.productModel.findOne({ cod_internal });
+
+    if (findCod) {
+      //Si rol no existe
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          type: 'UNIQUE',
+          message: 'El Cod. de barra y/o interno ya existe.',
+        },
+        HttpStatus.CONFLICT,
+      );
+    }
 
     const getMark = await this.markService.findMarkByName(String(mark));
     const getModel = await this.modelService.findModelByName(String(model));
     const getUnit = await this.unitService.findUnitByName(String(unit));
 
+    const idCodInterval = String(user.area._id).slice(-3).toUpperCase();
+
     const modifyData: Product = {
       ...createProduct,
+      cod_internal: `${idCodInterval}${cod_internal}`,
       mark: getMark._id,
       model: getModel._id,
       unit: getUnit._id,
+      area: user.area._id,
       status: true,
     };
 
@@ -88,8 +116,8 @@ export class ProductService {
     return createdProduct.save();
   }
 
-  async update(id: string, bodyProduct: Product): Promise<Product> {
-    const { mark, model, unit, status } = bodyProduct;
+  async update(id: string, bodyProduct: Product, user: any): Promise<Product> {
+    const { mark, model, unit, status, cod_internal } = bodyProduct;
 
     if (status) {
       throw new HttpException(
@@ -102,12 +130,43 @@ export class ProductService {
       );
     }
 
+    const findCod = await this.productModel.findOne({ cod_internal });
+    if (findCod && findCod._id.toString() !== id.toString()) {
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          type: 'UNIQUE',
+          message: 'El Cod. de barra y/o interno ya existe.',
+        },
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const findProductById = await this.productModel.findOne({ _id: id });
+
+    if (
+      findProductById &&
+      findProductById.area.toString() !== user.area._id.toString()
+    ) {
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          type: 'UNIQUE',
+          message: 'Este producto pertenece a otra area y/o sede.',
+        },
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const getMark = await this.markService.findMarkByName(String(mark));
     const getModel = await this.modelService.findModelByName(String(model));
     const getUnit = await this.unitService.findUnitByName(String(unit));
+    const idCodInterval = String(user.area._id).slice(-3).toUpperCase();
 
     const modifyData: Product = {
       ...bodyProduct,
+      cod_internal: `${idCodInterval}${cod_internal}`,
+      area: findProductById.area,
       mark: getMark._id,
       model: getModel._id,
       unit: getUnit._id,

@@ -18,6 +18,8 @@ import { ModuleOptionsSchema } from 'src/module-options/schemas/module-options.s
 import { OptionSchema } from 'src/option/schemas/option.schema';
 import { OptionService } from 'src/option/services/option.service';
 import { ConfigService } from '@nestjs/config';
+import { AreaSchema } from 'src/area/schemas/area.schema';
+import { AreaService } from 'src/area/services/area.service';
 
 @Module({
   imports: [
@@ -39,6 +41,7 @@ import { ConfigService } from '@nestjs/config';
       { name: 'Menu', schema: MenuSchema },
       { name: 'ModuleOptions', schema: ModuleOptionsSchema },
       { name: 'Option', schema: OptionSchema },
+      { name: 'Area', schema: AreaSchema },
     ]),
   ],
   controllers: [AuthController],
@@ -51,6 +54,7 @@ import { ConfigService } from '@nestjs/config';
     MenuService,
     ModuleOptionsService,
     OptionService,
+    AreaService,
   ],
 })
 export class AuthModule {}

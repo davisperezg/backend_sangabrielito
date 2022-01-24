@@ -1,3 +1,4 @@
+import { CtxUser } from 'src/lib/decorators/ctx-user.decorators';
 import {
   Body,
   Controller,
@@ -8,30 +9,35 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
 import { Product } from '../schemas/product.schema';
 import { ProductService } from '../services/product.service';
+import { UserDocument } from 'src/user/schemas/user.schema';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/v1/products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get()
-  getProducts() {
-    return this.productService.findAll();
+  getProducts(@CtxUser() user: UserDocument) {
+    return this.productService.findAll(user);
   }
 
   @Get('/removes')
-  getProductsRemoves() {
-    return this.productService.findAllDeleted();
+  getProductsRemoves(@CtxUser() user: UserDocument) {
+    return this.productService.findAllDeleted(user);
   }
 
   @Post()
   async createProduct(
     @Res() res,
     @Body() createBody: Product,
+    @CtxUser() user: UserDocument,
   ): Promise<Product> {
-    const product = await this.productService.create(createBody);
+    const product = await this.productService.create(createBody, user);
     return res.status(HttpStatus.OK).json({
       message: 'Product Successfully Created',
       product,
@@ -52,8 +58,13 @@ export class ProductController {
     @Res() res,
     @Param('id') id: string,
     @Body() createBody: Product,
+    @CtxUser() user: UserDocument,
   ): Promise<Product> {
-    const productUpdated = await this.productService.update(id, createBody);
+    const productUpdated = await this.productService.update(
+      id,
+      createBody,
+      user,
+    );
     return res.status(HttpStatus.OK).json({
       message: 'Product Updated Successfully',
       productUpdated,
