@@ -3,13 +3,15 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Sequence, SequenceDocument } from '../schemas/sequence.schema';
 import { AreaService } from 'src/area/services/area.service';
-import { Area, AreaDocument } from 'src/area/schemas/area.schema';
+import { FactService } from 'src/fact/services/fact.service';
+import { FactDocument } from 'src/fact/schemas/fact.schema';
 
 @Injectable()
 export class SequenceService {
   constructor(
     @InjectModel('Sequence') private sequenceModel: Model<SequenceDocument>,
     private readonly areaService: AreaService,
+    @InjectModel('Fact') private factModel: Model<FactDocument>,
   ) {}
 
   // async onModuleInit() {
@@ -42,7 +44,6 @@ export class SequenceService {
     });
 
     if (findDataSequences) {
-      //Si rol no existe
       throw new HttpException(
         {
           status: HttpStatus.CONFLICT,
@@ -63,7 +64,34 @@ export class SequenceService {
   }
 
   async update(id: string, bodySequence: Sequence): Promise<Sequence> {
-    const { area } = bodySequence;
+    const { area, sequence } = bodySequence;
+
+    const findCodInFacts = await this.factModel.find().populate([
+      {
+        path: 'client',
+      },
+      {
+        path: 'user',
+        populate: { path: 'area' },
+      },
+    ]);
+    const findCodFactsByArea = findCodInFacts
+      .filter((fin: any) => fin.user.area.name === area.toString())
+      .find((one: any) =>
+        Number(sequence) <= Number(one.cod_fact) ? true : false,
+      );
+
+    if (findCodFactsByArea) {
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          type: 'UNIQUE',
+          message:
+            'La secuencia no puede ser igual al de una venta que ya existe. Por favor use su secuencia actual o cambiela a una mayor.',
+        },
+        HttpStatus.CONFLICT,
+      );
+    }
 
     const findMyData = await this.sequenceModel.findOne({ _id: id });
     const getArea = await this.areaService.findAreaByName(String(area));

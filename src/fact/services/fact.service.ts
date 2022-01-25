@@ -35,6 +35,10 @@ export class FactService {
     ]);
   }
 
+  async findByCodFact(fact: any): Promise<Fact> {
+    return this.factModel.findOne({ fact: fact });
+  }
+
   async restore(id: string): Promise<boolean> {
     let result = false;
 
