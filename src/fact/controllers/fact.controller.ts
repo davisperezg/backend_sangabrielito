@@ -22,13 +22,13 @@ export class FactController {
   constructor(private readonly factService: FactService) {}
 
   @Get()
-  getFacts() {
-    return this.factService.findAll();
+  getFacts(@CtxUser() user: UserDocument) {
+    return this.factService.findAll(user);
   }
 
   @Get('/removes')
-  getFactsRemoves() {
-    return this.factService.findAllDeleted();
+  getFactsRemoves(@CtxUser() user: UserDocument) {
+    return this.factService.findAllDeleted(user);
   }
 
   @Post()

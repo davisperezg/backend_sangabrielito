@@ -13,8 +13,8 @@ export class FactService {
     private readonly clientService: ClientService,
   ) {}
 
-  async findAll(): Promise<Fact[]> {
-    return this.factModel.find({ status: true }).populate([
+  async findAll(user: any): Promise<Fact[]> {
+    const allFacts = await this.factModel.find({ status: true }).populate([
       {
         path: 'client',
       },
@@ -22,10 +22,16 @@ export class FactService {
         path: 'user',
       },
     ]);
+
+    const justArea = allFacts.filter(
+      (fact) => fact.user.area.toString() === user.area._id.toString(),
+    );
+
+    return justArea;
   }
 
-  async findAllDeleted(): Promise<Fact[]> {
-    return this.factModel.find({ status: false }).populate([
+  async findAllDeleted(user: any): Promise<Fact[]> {
+    const allFacts = await this.factModel.find({ status: false }).populate([
       {
         path: 'client',
       },
@@ -33,10 +39,16 @@ export class FactService {
         path: 'user',
       },
     ]);
+
+    const justArea = allFacts.filter(
+      (fact) => fact.user.area.toString() === user.area._id.toString(),
+    );
+
+    return justArea;
   }
 
   async findByCodFact(fact: any): Promise<Fact> {
-    return this.factModel.findOne({ fact: fact });
+    return await this.factModel.findOne({ fact: fact });
   }
 
   async restore(id: string): Promise<boolean> {
