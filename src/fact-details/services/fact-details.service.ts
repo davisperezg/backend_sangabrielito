@@ -31,7 +31,9 @@ export class Fact_DetailsDetailsService {
     ]);
   }
 
-  async create(createFact_Details: Fact_Details): Promise<Fact_Details> {
+  async create(
+    createFact_Details: Fact_Details,
+  ): Promise<Fact_Details | boolean> {
     const { fact, product } = createFact_Details;
 
     const getFact = await this.factService.findFactByCod(Number(fact));
@@ -42,6 +44,31 @@ export class Fact_DetailsDetailsService {
       product: product,
       status: true,
     };
+
+    const findProduct = await this.productService.findProductById(
+      String(product),
+    );
+
+    const stock = findProduct.stock;
+    const quantity = modifyData.quantity;
+    const updateStock = stock - quantity;
+
+    if (updateStock < 0) {
+      return await this.factService.delete(getFact._id);
+      // throw new HttpException(
+      //   {
+      //     status: HttpStatus.BAD_REQUEST,
+      //     type: 'ERROR',
+      //     message:
+      //       'El producto ingresado no tiene stock. Por favor incremente en el inventario',
+      //   },
+      //   HttpStatus.BAD_REQUEST,
+      // );
+    }
+
+    this.productService.findProductByIdAndUpdate(String(product), {
+      stock: updateStock,
+    });
 
     const createdModule = new this.detailsModel(modifyData);
     return createdModule.save();

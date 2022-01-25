@@ -9,6 +9,8 @@ import { AreaSchema } from 'src/area/schemas/area.schema';
 import { AreaService } from 'src/area/services/area.service';
 import { ClientSchema } from 'src/client/schemas/client.schema';
 import { ClientService } from 'src/client/services/client.service';
+import { Fact_DetailsSchema } from 'src/fact-details/schemas/fact-details.schema';
+import { ProductSchema } from 'src/product/schemas/product.schema';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { ClientService } from 'src/client/services/client.service';
       { name: 'Sequence', schema: SequenceSchema },
       { name: 'Area', schema: AreaSchema },
       { name: 'Client', schema: ClientSchema },
+      { name: 'Fact_Details', schema: Fact_DetailsSchema },
+      { name: 'Product', schema: ProductSchema },
     ]),
   ],
   providers: [FactService, SequenceService, AreaService, ClientService],

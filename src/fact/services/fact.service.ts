@@ -1,9 +1,12 @@
+import { Fact_DetailsDetailsService } from './../../fact-details/services/fact-details.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ClientService } from 'src/client/services/client.service';
 import { SequenceService } from 'src/sequence/services/sequence.service';
 import { Fact, FactDocument } from '../schemas/fact.schema';
+import { Fact_DetailsDocument } from 'src/fact-details/schemas/fact-details.schema';
+import { ProductDocument } from 'src/product/schemas/product.schema';
 
 @Injectable()
 export class FactService {
@@ -11,6 +14,10 @@ export class FactService {
     @InjectModel('Fact') private factModel: Model<FactDocument>,
     private readonly sequenceService: SequenceService,
     private readonly clientService: ClientService,
+    @InjectModel('Fact_Details')
+    private detailsModel: Model<Fact_DetailsDocument>,
+    @InjectModel('Product')
+    private productModel: Model<ProductDocument>,
   ) {}
 
   async findAll(user: any): Promise<Fact[]> {
@@ -64,10 +71,30 @@ export class FactService {
     return result;
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete(id: string | any): Promise<boolean> {
     let result = false;
 
     try {
+      //busco los productos x id de la fact
+      const findItemsByFact = await this.detailsModel.find({
+        fact: id,
+        status: true,
+      });
+      //recorro los productos de la fact y busco mis productos del inventario x id
+      findItemsByFact.map(async (product) => {
+        //obtengo mi stock actual x producto
+        const myProduct = await this.productModel.findOne({
+          _id: product.product,
+        });
+        //una vez que obtenga el stck actual, actualizo y sumo por lo que tenia en la fact
+        await this.productModel.findByIdAndUpdate(
+          product.product,
+          { stock: myProduct.stock + product.quantity },
+          { new: true },
+        );
+      });
+
+      //anulo fact
       await this.factModel.findByIdAndUpdate(id, { status: false });
       result = true;
     } catch (e) {
@@ -115,6 +142,7 @@ export class FactService {
     await this.sequenceService.getNextSequenceValue(getSequence._id);
 
     const createdModule = new this.factModel(modifyData);
+
     return createdModule.save();
   }
 

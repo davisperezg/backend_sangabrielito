@@ -85,7 +85,6 @@ export class ProductService {
     const findCod = await this.productModel.findOne({ cod_internal });
 
     if (findCod) {
-      //Si rol no existe
       throw new HttpException(
         {
           status: HttpStatus.CONFLICT,
@@ -179,5 +178,18 @@ export class ProductService {
 
   async findProductByName(product: string): Promise<ProductDocument> {
     return await this.productModel.findOne({ name: product });
+  }
+
+  async findProductById(product: string): Promise<ProductDocument> {
+    return await this.productModel.findOne({ _id: product });
+  }
+
+  async findProductByIdAndUpdate(
+    id: string,
+    body: { stock: number },
+  ): Promise<ProductDocument> {
+    return await this.productModel.findByIdAndUpdate(id, body, {
+      new: true,
+    });
   }
 }
