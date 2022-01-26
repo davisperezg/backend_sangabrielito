@@ -56,7 +56,7 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
-    console.log(refreshTokens);
+
     //email in refresh token
     refreshTokens[refresh_token] = username;
 
