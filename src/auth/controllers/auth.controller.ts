@@ -1,12 +1,12 @@
 import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 
-@Controller('api/v1/auth/login')
+@Controller('api/v1/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   //Lgin
-  @Post()
+  @Post('/login')
   async login(
     @Res() res,
     @Body() data: { username: string; password: string },
@@ -17,5 +17,10 @@ export class AuthController {
       message: 'User Logged',
       user,
     });
+  }
+
+  @Post('/token')
+  async token(@Body() data: { username: string; refreshToken: string }) {
+    return await this.authService.getTokenWithRefresh(data);
   }
 }

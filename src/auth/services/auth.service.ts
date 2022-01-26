@@ -27,9 +27,9 @@ export class AuthService {
         {
           status: HttpStatus.BAD_REQUEST,
           type: 'BAD_REQUEST',
-          message: 'Username or Password invalid',
+          message: 'Username or Password invalid.',
         },
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.BAD_REQUEST,
       );
 
     //verify password with password hashed in db
@@ -41,9 +41,9 @@ export class AuthService {
         {
           status: HttpStatus.BAD_REQUEST,
           type: 'BAD_REQUEST',
-          message: 'Username or Password invalid',
+          message: 'Username or Password invalid.',
         },
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.BAD_REQUEST,
       );
 
     if (findUser.status !== true) {
@@ -51,7 +51,7 @@ export class AuthService {
         {
           status: HttpStatus.UNAUTHORIZED,
           type: 'UNAUTHORIZED',
-          message: 'User does not have access',
+          message: 'No tienes acceso.',
         },
         HttpStatus.UNAUTHORIZED,
       );
@@ -62,6 +62,31 @@ export class AuthService {
 
     //return {access_token and refresh_token}
     return { access_token: this.getToken(findUser._id), refresh_token };
+  }
+
+  //method to validate token with refresh-token v0.0.1
+  async getTokenWithRefresh(body: { username: string; refreshToken: string }) {
+    const username = body.username;
+    const refreshToken = body.refreshToken;
+
+    const findUser = await this.userService.findUserByUsername(username);
+
+    //verify if exist refresh token and email in refresh token, is correct  ?
+    if (
+      refreshToken in refreshTokens &&
+      refreshTokens[refreshToken] === username
+    ) {
+      return { access_token: this.getToken(findUser._id) };
+    } else {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          type: 'UNAUTHORIZED',
+          message: 'Ocurrio un error, recargue la pagina.',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
   }
 
   //method to get token in login
