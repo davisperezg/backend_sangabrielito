@@ -8,10 +8,13 @@ import {
   Put,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
 import { Menu, MenuDocument } from '../schemas/menu.schema';
 import { MenuService } from '../services/menu.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/v1/menus')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}

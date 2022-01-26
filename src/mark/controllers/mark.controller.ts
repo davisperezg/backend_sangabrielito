@@ -8,10 +8,13 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
 import { Mark } from '../schemas/mark.schemas';
 import { MarkService } from '../services/mark.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/v1/marks')
 export class MarkController {
   constructor(private readonly markService: MarkService) {}

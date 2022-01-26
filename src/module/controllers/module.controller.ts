@@ -8,10 +8,13 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
 import { Module } from '../schemas/module.schema';
 import { ModuleService } from '../services/module.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/v1/modules')
 export class ModuleController {
   constructor(private readonly moduleService: ModuleService) {}

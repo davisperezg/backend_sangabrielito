@@ -1,4 +1,3 @@
-import { AreaDocument } from './../../area/schemas/area.schema';
 import {
   Body,
   Controller,
@@ -8,10 +7,13 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Sequence } from '../schemas/sequence.schema';
 import { SequenceService } from '../services/sequence.service';
+import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/v1/sequences')
 export class SequenceController {
   constructor(private readonly sequenceService: SequenceService) {}

@@ -8,11 +8,14 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
 import { Area } from '../schemas/area.schema';
 import { AreaService } from '../services/area.service';
 
 @Controller('api/v1/areas')
+@UseGuards(JwtAuthGuard)
 export class AreaController {
   constructor(private readonly areaService: AreaService) {}
 

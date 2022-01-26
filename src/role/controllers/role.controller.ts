@@ -8,11 +8,13 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
 import { Role } from '../schemas/role.schema';
 import { RoleService } from '../services/role.service';
 
-//@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('api/v1/roles')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}

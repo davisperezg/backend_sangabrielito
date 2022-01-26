@@ -1,16 +1,16 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpStatus,
   Param,
   Post,
-  Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Fact_Details } from '../schemas/fact-details.schema';
 import { Fact_DetailsDetailsService } from '../services/fact-details.service';
+import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
 
 @Controller('api/v1/fact-details')
 export class FactDetailsController {
@@ -22,11 +22,13 @@ export class FactDetailsController {
   }
 
   @Get('/nro/:id')
+  @UseGuards(JwtAuthGuard)
   getFactDetailss(@Param('id') fact: string) {
     return this.detailsService.findAll(fact);
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   async createFactDetails(
     @Res() res,
     @Body() createBody: Fact_Details,

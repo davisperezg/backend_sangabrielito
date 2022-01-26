@@ -15,6 +15,7 @@ import { User, UserDocument } from '../schemas/user.schema';
 import { CtxUser } from 'src/lib/decorators/ctx-user.decorators';
 import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/v1/users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -32,7 +33,6 @@ export class UserController {
   }
 
   // Get Me
-  @UseGuards(JwtAuthGuard)
   @Get('/whois')
   whois(@Res() res, @CtxUser() user: UserDocument): Promise<UserDocument> {
     return res.status(HttpStatus.OK).json(user);
