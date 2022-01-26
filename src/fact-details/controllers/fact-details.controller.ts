@@ -16,6 +16,11 @@ import { Fact_DetailsDetailsService } from '../services/fact-details.service';
 export class FactDetailsController {
   constructor(private readonly detailsService: Fact_DetailsDetailsService) {}
 
+  @Get('/checking/:id')
+  getDetailsByIdPublic(@Param('id') id: string) {
+    return this.detailsService.findDetailsByIdFact(id);
+  }
+
   @Get('/nro/:id')
   getFactDetailss(@Param('id') fact: string) {
     return this.detailsService.findAll(fact);

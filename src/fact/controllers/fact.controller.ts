@@ -16,22 +16,29 @@ import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
 import { Fact } from '../schemas/fact.schema';
 import { FactService } from '../services/fact.service';
 
-@UseGuards(JwtAuthGuard)
 @Controller('api/v1/facts')
 export class FactController {
   constructor(private readonly factService: FactService) {}
 
+  @Get('/checking/:id')
+  getFactByIdPublic(@Param('id') id: string) {
+    return this.factService.findFactById(id);
+  }
+
   @Get()
+  @UseGuards(JwtAuthGuard)
   getFacts(@CtxUser() user: UserDocument) {
     return this.factService.findAll(user);
   }
 
   @Get('/removes')
+  @UseGuards(JwtAuthGuard)
   getFactsRemoves(@CtxUser() user: UserDocument) {
     return this.factService.findAllDeleted(user);
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   async createFact(
     @Res() res,
     @Body() createBody: Fact,
@@ -45,24 +52,12 @@ export class FactController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   async deleteFact(@Res() res, @Param('id') id: string): Promise<boolean> {
     const factDeleted = await this.factService.delete(id);
     return res.status(HttpStatus.OK).json({
       message: 'Fact Deleted Successfully',
       factDeleted,
-    });
-  }
-
-  @Put(':id')
-  async updateFact(
-    @Res() res,
-    @Param('id') id: string,
-    @Body() createBody: Fact,
-  ): Promise<Fact> {
-    const factUpdated = await this.factService.update(id, createBody);
-    return res.status(HttpStatus.OK).json({
-      message: 'Fact Updated Successfully',
-      factUpdated,
     });
   }
 }

@@ -1,4 +1,3 @@
-import { Fact_DetailsDetailsService } from './../../fact-details/services/fact-details.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -52,23 +51,6 @@ export class FactService {
     );
 
     return justArea;
-  }
-
-  async findByCodFact(fact: any): Promise<Fact> {
-    return await this.factModel.findOne({ fact: fact });
-  }
-
-  async restore(id: string): Promise<boolean> {
-    let result = false;
-
-    try {
-      await this.factModel.findByIdAndUpdate(id, { status: true });
-      result = true;
-    } catch (e) {
-      //throw new Error(`Error en ProductService.deleteProductById ${e}`);
-    }
-
-    return result;
   }
 
   async delete(id: string | any): Promise<boolean> {
@@ -146,26 +128,51 @@ export class FactService {
     return createdModule.save();
   }
 
-  async update(id: string, bodyFact: Fact): Promise<Fact> {
-    const { status } = bodyFact;
-
-    if (status) {
-      throw new HttpException(
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          type: 'UNAUTHORIZED',
-          message: 'Unauthorized Exception',
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-
-    return await this.factModel.findByIdAndUpdate(id, bodyFact, {
-      new: true,
-    });
-  }
-
   async findFactByCod(fact: number): Promise<FactDocument> {
     return await this.factModel.findOne({ cod_fact: fact });
+  }
+
+  async findFactById(id: string) {
+    const fact: any = await this.factModel.findOne({ _id: id }).populate([
+      {
+        path: 'client',
+      },
+      {
+        path: 'user',
+        populate: {
+          path: 'area',
+        },
+      },
+    ]);
+
+    let showData = {};
+
+    if (fact.way_to_pay === 'EFECTIVO CON VUELTO') {
+      showData = {
+        cliente: fact.client.name + ' ' + fact.client.lastname,
+        vendedor: fact.user.name + ' ' + fact.user.lastname,
+        fecha_creada: fact.createdAt,
+        cod_fact: fact.cod_fact,
+        tipo_pago: fact.payment_type,
+        forma_pago: fact.way_to_pay,
+        total: fact.subtotal,
+        descuento: fact.discount,
+        pago_cliente: fact.customer_payment,
+        area: fact.user.area.name,
+      };
+    } else {
+      showData = {
+        cliente: fact.client.name + ' ' + fact.client.lastname,
+        vendedor: fact.user.name + ' ' + fact.user.lastname,
+        fecha_creada: fact.createdAt,
+        cod_fact: fact.cod_fact,
+        tipo_pago: fact.payment_type,
+        forma_pago: fact.way_to_pay,
+        total: fact.subtotal,
+        area: fact.user.area.name,
+      };
+    }
+
+    return showData;
   }
 }

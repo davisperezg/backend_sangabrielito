@@ -73,4 +73,26 @@ export class Fact_DetailsDetailsService {
     const createdModule = new this.detailsModel(modifyData);
     return createdModule.save();
   }
+
+  async findDetailsByIdFact(id: any) {
+    const details = await this.detailsModel
+      .find({ fact: { $in: id } })
+      .populate({
+        path: 'product',
+        populate: {
+          path: 'unit',
+        },
+      });
+
+    const showDetails = details.map((detls) => {
+      return {
+        producto: detls.product.name + ' - ' + detls.product.unit.name,
+        precio: detls.price,
+        descuento: detls.discount,
+        cantidad: detls.quantity,
+      };
+    });
+
+    return showDetails;
+  }
 }
