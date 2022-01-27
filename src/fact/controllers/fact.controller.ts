@@ -31,6 +31,12 @@ export class FactController {
     return this.factService.findAll(user);
   }
 
+  @Get('/consult/range/:start/:end')
+  @UseGuards(JwtAuthGuard)
+  getFactStartAndEnd(@Param('start') start: string, @Param('end') end: string) {
+    return this.factService.findStartAndEnd(start, end);
+  }
+
   @Get('/removes')
   @UseGuards(JwtAuthGuard)
   getFactsRemoves(@CtxUser() user: UserDocument) {

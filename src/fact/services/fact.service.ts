@@ -6,6 +6,7 @@ import { SequenceService } from 'src/sequence/services/sequence.service';
 import { Fact, FactDocument } from '../schemas/fact.schema';
 import { Fact_DetailsDocument } from 'src/fact-details/schemas/fact-details.schema';
 import { ProductDocument } from 'src/product/schemas/product.schema';
+import { startOfDay, add, endOfDay } from 'date-fns';
 
 @Injectable()
 export class FactService {
@@ -51,6 +52,31 @@ export class FactService {
     );
 
     return justArea;
+  }
+
+  async findStartAndEnd(start: string, end: string): Promise<Fact[]> {
+    const ini = startOfDay(new Date(start));
+    const addDayIni = add(ini, { days: 1 });
+
+    const fin = endOfDay(new Date(end));
+    const addDayEnd = add(fin, { days: 1 });
+
+    return await this.factModel
+      .find({
+        status: true,
+        createdAt: {
+          $gte: addDayIni,
+          $lt: addDayEnd,
+        },
+      })
+      .populate([
+        {
+          path: 'client',
+        },
+        {
+          path: 'user',
+        },
+      ]);
   }
 
   async delete(id: string | any): Promise<boolean> {

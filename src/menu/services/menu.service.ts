@@ -75,6 +75,17 @@ export class MenuService implements OnModuleInit {
           status: true,
           link: 'ventas',
         }).save(),
+        // 27/01/2022
+        new this.menuModel({
+          name: 'Consultar ventas',
+          status: true,
+          link: 'consultar-ventas',
+        }).save(),
+        new this.menuModel({
+          name: 'Consultar productos',
+          status: true,
+          link: 'consultar-productos',
+        }).save(),
       ]);
     } catch (e) {
       throw new Error(`Error en MenuService.onModuleInit ${e}`);
