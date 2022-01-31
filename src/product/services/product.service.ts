@@ -6,6 +6,8 @@ import { ModelService } from 'src/model/services/model.service';
 import { UnitMeasureService } from 'src/unit-measure/services/unit-measure.service';
 import { Product, ProductDocument } from '../schemas/product.schema';
 
+//let productsErrors: any[] = [];
+
 @Injectable()
 export class ProductService {
   constructor(
@@ -80,28 +82,50 @@ export class ProductService {
   }
 
   async create(createProduct: Product, user: any): Promise<Product> {
-    const { mark, model, unit, cod_internal } = createProduct;
+    const { mark, model, unit, cod_internal, xmls }: any = createProduct;
 
-    const findCod = await this.productModel.findOne({ cod_internal });
-
-    if (findCod) {
-      throw new HttpException(
-        {
-          status: HttpStatus.CONFLICT,
-          type: 'UNIQUE',
-          message: 'El Cod. de barra y/o interno ya existe.',
-        },
-        HttpStatus.CONFLICT,
-      );
-    }
+    const idCodInterval = String(user.area._id).slice(-3).toUpperCase();
 
     const getMark = await this.markService.findMarkByName(String(mark));
     const getModel = await this.modelService.findModelByName(String(model));
     const getUnit = await this.unitService.findUnitByName(String(unit));
 
-    const idCodInterval = String(user.area._id).slice(-3).toUpperCase();
+    if (xmls) {
+      const findCod = await this.productModel.findOne({
+        cod_internal: cod_internal,
+      });
+      const updateRenew = {
+        ...createProduct,
+        mark: getMark._id,
+        model: getModel._id,
+        unit: getUnit._id,
+        area: user.area._id,
+        status: true,
+      };
+      return await this.productModel.findByIdAndUpdate(
+        findCod._id,
+        updateRenew,
+        {
+          new: true,
+        },
+      );
+    } else {
+      const findCod = await this.productModel.findOne({
+        cod_internal: idCodInterval + cod_internal,
+      });
+      if (findCod) {
+        throw new HttpException(
+          {
+            status: HttpStatus.CONFLICT,
+            type: 'UNIQUE',
+            message: 'El Cod. de barra y/o interno ya existe.',
+          },
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
 
-    const modifyData: Product = {
+    const modifyData: any = {
       ...createProduct,
       cod_internal: `${idCodInterval}${cod_internal}`,
       mark: getMark._id,
@@ -112,11 +136,12 @@ export class ProductService {
     };
 
     const createdProduct = new this.productModel(modifyData);
-    return createdProduct.save();
+    return await createdProduct.save();
   }
 
   async update(id: string, bodyProduct: Product, user: any): Promise<Product> {
     const { mark, model, unit, status, cod_internal } = bodyProduct;
+    const idCodInterval = String(user.area._id).slice(-3).toUpperCase();
 
     if (status) {
       throw new HttpException(
@@ -129,7 +154,10 @@ export class ProductService {
       );
     }
 
-    const findCod = await this.productModel.findOne({ cod_internal });
+    const findCod = await this.productModel.findOne({
+      cod_internal: idCodInterval + cod_internal,
+    });
+
     if (findCod && findCod._id.toString() !== id.toString()) {
       throw new HttpException(
         {
@@ -160,7 +188,6 @@ export class ProductService {
     const getMark = await this.markService.findMarkByName(String(mark));
     const getModel = await this.modelService.findModelByName(String(model));
     const getUnit = await this.unitService.findUnitByName(String(unit));
-    const idCodInterval = String(user.area._id).slice(-3).toUpperCase();
 
     const modifyData: Product = {
       ...bodyProduct,

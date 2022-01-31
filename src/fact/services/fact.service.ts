@@ -185,6 +185,7 @@ export class FactService {
         descuento: fact.discount,
         pago_cliente: fact.customer_payment,
         area: fact.user.area.name,
+        status: fact.status,
       };
     } else {
       showData = {
@@ -196,6 +197,7 @@ export class FactService {
         forma_pago: fact.way_to_pay,
         total: fact.subtotal,
         area: fact.user.area.name,
+        status: fact.status,
       };
     }
 
