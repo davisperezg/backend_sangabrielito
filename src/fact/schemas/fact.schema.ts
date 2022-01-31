@@ -7,7 +7,7 @@ export type FactDocument = Fact & mongoose.Document;
 @Schema({ timestamps: true, versionKey: false })
 export class Fact {
   @Prop({ trim: true, unique: true, uppercase: true })
-  cod_fact: number;
+  cod_fact: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

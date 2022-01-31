@@ -11,6 +11,8 @@ import {
 import { Fact_Details } from '../schemas/fact-details.schema';
 import { Fact_DetailsDetailsService } from '../services/fact-details.service';
 import { JwtAuthGuard } from 'src/lib/guards/auth.guard';
+import { UserDocument } from 'src/user/schemas/user.schema';
+import { CtxUser } from 'src/lib/decorators/ctx-user.decorators';
 
 @Controller('api/v1/fact-details')
 export class FactDetailsController {
@@ -32,8 +34,9 @@ export class FactDetailsController {
   async createFactDetails(
     @Res() res,
     @Body() createBody: Fact_Details,
+    @CtxUser() user: UserDocument,
   ): Promise<Fact_Details> {
-    const details = await this.detailsService.create(createBody);
+    const details = await this.detailsService.create(createBody, user);
     return res.status(HttpStatus.OK).json({
       message: 'FactDetails Successfully Created',
       details,

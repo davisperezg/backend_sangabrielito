@@ -33,10 +33,14 @@ export class Fact_DetailsDetailsService {
 
   async create(
     createFact_Details: Fact_Details,
+    user: any,
   ): Promise<Fact_Details | boolean> {
     const { fact, product } = createFact_Details;
 
-    const getFact = await this.factService.findFactByCod(Number(fact));
+    const idCodInterval = String(user.area._id).slice(-3).toUpperCase();
+    const getFact = await this.factService.findFactByCod(
+      String(idCodInterval + fact),
+    );
 
     const modifyData: Fact_Details = {
       ...createFact_Details,

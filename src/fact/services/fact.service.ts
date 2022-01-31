@@ -115,7 +115,10 @@ export class FactService {
   async create(createFact: Fact, user: any): Promise<Fact> {
     const { cod_fact, client } = createFact;
 
-    const findFact = await this.factModel.findOne({ cod_fact });
+    const idCodInterval = String(user.area._id).slice(-3).toUpperCase();
+    const findFact = await this.factModel.findOne({
+      cod_fact: idCodInterval + cod_fact,
+    });
 
     if (findFact) {
       //No se puede crear el elemento
@@ -140,7 +143,7 @@ export class FactService {
 
     const modifyData: Fact = {
       ...createFact,
-      cod_fact: getSequence.sequence,
+      cod_fact: idCodInterval + getSequence.sequence,
       user: user._id,
       client: getClient._id,
       status: true,
@@ -154,7 +157,7 @@ export class FactService {
     return createdModule.save();
   }
 
-  async findFactByCod(fact: number): Promise<FactDocument> {
+  async findFactByCod(fact: string): Promise<FactDocument> {
     return await this.factModel.findOne({ cod_fact: fact });
   }
 
