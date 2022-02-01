@@ -197,6 +197,7 @@ export class FactService {
         fecha_creada: fact.createdAt,
         cod_fact: fact.cod_fact,
         tipo_pago: fact.payment_type,
+        descuento: fact.discount,
         forma_pago: fact.way_to_pay,
         total: fact.subtotal,
         area: fact.user.area.name,
