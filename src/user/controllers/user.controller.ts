@@ -32,6 +32,11 @@ export class UserController {
     return this.userService.findAllDeleted();
   }
 
+  @Get('/services/:type/:number')
+  getServices(@Param('type') type: string, @Param('number') number: string) {
+    return this.userService.findPerson(type, number);
+  }
+
   // Get Me
   @Get('/whois')
   whois(@Res() res, @CtxUser() user: UserDocument): Promise<UserDocument> {

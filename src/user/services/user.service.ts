@@ -10,6 +10,7 @@ import { AreaService } from 'src/area/services/area.service';
 import { comparePassword, hashPassword } from 'src/lib/helpers/auth.helper';
 import { RoleService } from 'src/role/services/role.service';
 import { User, UserDocument } from '../schemas/user.schema';
+import axios from 'axios';
 
 @Injectable()
 export class UserService implements OnApplicationBootstrap {
@@ -83,6 +84,20 @@ export class UserService implements OnApplicationBootstrap {
         path: 'area',
       },
     ]);
+  }
+
+  async findPerson(type: string, number: string) {
+    console.log(process.env.TOKEN_APIS_NET);
+    const { data } = await axios.get(
+      `https://api.apis.net.pe/v1/${type}?numero=${number}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${process.env.TOKEN_APIS_NET}`,
+        },
+      },
+    );
+    return data;
   }
 
   async findAllDeleted(): Promise<User[]> {
