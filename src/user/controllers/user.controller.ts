@@ -72,6 +72,21 @@ export class UserController {
     });
   }
 
+  // Update User: /users/605ab8372ed8db2ad4839d87
+  @Put('/change-password/:id')
+  async changePassword(
+    @Res() res,
+    @Param('id') id: string,
+    @Body()
+    createBody: {
+      newPassword: string;
+    },
+  ): Promise<User> {
+    const { newPassword } = createBody;
+    const userUpdated = await this.userService.changePassword(id, newPassword);
+    return res.status(HttpStatus.OK).json(userUpdated);
+  }
+
   // Restore User: /users/restore/605ab8372ed8db2ad4839d87
   @Put('restore/:id')
   async restoreUser(@Res() res, @Param('id') id: string): Promise<User> {

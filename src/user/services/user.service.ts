@@ -7,7 +7,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AreaService } from 'src/area/services/area.service';
-import { hashPassword } from 'src/lib/helpers/auth.helper';
+import { comparePassword, hashPassword } from 'src/lib/helpers/auth.helper';
 import { RoleService } from 'src/role/services/role.service';
 import { User, UserDocument } from '../schemas/user.schema';
 
@@ -48,6 +48,30 @@ export class UserService implements OnApplicationBootstrap {
     } catch (e) {
       throw new Error(`Error en ModuleService.onModuleInit ${e}`);
     }
+  }
+
+  async changePassword(id: string, newPassword: string): Promise<boolean> {
+    let result = false;
+
+    const findUser = await this.userModel.findById({ _id: id });
+
+    const { _id } = findUser;
+
+    if (newPassword) {
+      const passwordHashed = await hashPassword(newPassword);
+
+      await this.userModel.findByIdAndUpdate(
+        _id,
+        {
+          password: passwordHashed,
+        },
+        { new: true },
+      );
+
+      result = true;
+    }
+
+    return result;
   }
 
   async findAll(): Promise<User[]> {
