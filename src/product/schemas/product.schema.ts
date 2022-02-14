@@ -51,6 +51,9 @@ export class Product {
   @Prop({ trim: true, required: true })
   price: number;
 
+  @Prop({ trim: true, required: true })
+  price_c: number;
+
   @Prop({ trim: true })
   status: boolean;
 }
