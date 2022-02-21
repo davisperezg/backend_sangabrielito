@@ -55,6 +55,9 @@ export class Product {
   price_c: number;
 
   @Prop({ trim: true })
+  fecVen: Date;
+
+  @Prop({ trim: true })
   status: boolean;
 }
 
