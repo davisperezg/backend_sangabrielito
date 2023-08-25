@@ -34,12 +34,12 @@ export class UserService implements OnApplicationBootstrap {
 
       await this.userModel.insertMany([
         {
-          name: 'Blas',
-          lastname: 'Solorzano',
+          name: 'Admin',
+          lastname: 'admin',
           tipDocument: 'DNI',
           nroDocument: '99999999',
-          email: 'admin@dev.kematechnology.com',
-          username: '99999999',
+          email: 'admin@admin.com',
+          username: 'admin',
           password: passwordHashed,
           status: true,
           role: getRole._id,

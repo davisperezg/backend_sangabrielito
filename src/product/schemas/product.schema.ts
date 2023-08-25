@@ -45,13 +45,13 @@ export class Product {
   })
   area: Area;
 
-  @Prop({ trim: true, required: true })
+  @Prop({ required: false })
   stock: number;
 
-  @Prop({ trim: true, required: true })
+  @Prop({ required: false })
   price: number;
 
-  @Prop({ trim: true, required: true })
+  @Prop({ required: false })
   price_c: number;
 
   @Prop({ trim: true })
