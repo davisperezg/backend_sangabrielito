@@ -53,11 +53,16 @@ export class ModuleService implements OnApplicationBootstrap {
         'Realizar ventas',
       ]);
 
+      const getMenusConsultas = await this.menuService.findbyName([
+        'Consultar productos',
+      ]);
+
       const findMenusADM = getMenusADM.map((men) => men._id);
       const findMenusInventario = getMenusInventario.map((men) => men._id);
       const findMenusClient = getMenusClient.map((men) => men._id);
       const findMenusCompras = getMenusCompras.map((men) => men._id);
       const findMenusComprobantes = getMenusComprobantes.map((men) => men._id);
+      const findMenusConsultas = getMenusConsultas.map((con) => con._id);
 
       await Promise.all([
         new this.moduleModel({
@@ -70,24 +75,25 @@ export class ModuleService implements OnApplicationBootstrap {
           status: true,
           menu: findMenusInventario,
         }).save(),
-        new this.moduleModel({
-          name: 'Clientes',
-          status: true,
-          menu: findMenusClient,
-        }).save(),
-        new this.moduleModel({
-          name: 'Compras',
-          status: true,
-          menu: findMenusCompras,
-        }).save(),
-        new this.moduleModel({
-          name: 'Comprobantes',
-          status: true,
-          menu: findMenusComprobantes,
-        }).save(),
+        // new this.moduleModel({
+        //   name: 'Clientes',
+        //   status: true,
+        //   menu: findMenusClient,
+        // }).save(),
+        // new this.moduleModel({
+        //   name: 'Compras',
+        //   status: true,
+        //   menu: findMenusCompras,
+        // }).save(),
+        // new this.moduleModel({
+        //   name: 'Comprobantes',
+        //   status: true,
+        //   menu: findMenusComprobantes,
+        // }).save(),
         new this.moduleModel({
           name: 'Consultas y Reportes',
           status: true,
+          menu: findMenusConsultas,
         }).save(),
       ]);
 

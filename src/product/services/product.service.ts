@@ -18,9 +18,8 @@ export class ProductService {
   ) {}
 
   async findAll(user: any): Promise<Product[]> {
-    return this.productModel
-      .find({ status: true, area: user.area._id })
-      .populate([
+    if (user.role.name === 'SUPER ADMINISTRADOR') {
+      return this.productModel.find().populate([
         {
           path: 'mark',
         },
@@ -34,6 +33,22 @@ export class ProductService {
           path: 'area',
         },
       ]);
+    } else {
+      return this.productModel.find({ area: user.area._id }).populate([
+        {
+          path: 'mark',
+        },
+        {
+          path: 'model',
+        },
+        {
+          path: 'unit',
+        },
+        {
+          path: 'area',
+        },
+      ]);
+    }
   }
 
   async findAllDeleted(user: any): Promise<Product[]> {
