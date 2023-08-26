@@ -37,7 +37,7 @@ export class ModuleService implements OnApplicationBootstrap {
       const getMenusInventario = await this.menuService.findbyName([
         'Productos',
         'Marcas',
-        'Categoria',
+        'Modelos',
         'Unidad de medida',
       ]);
 

@@ -1,11 +1,24 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  OnApplicationBootstrap,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MdelDocument, Mdel } from '../schemas/model.schema';
+import { CATEGORIAS_INDEX } from 'src/lib/const/consts';
 
 @Injectable()
-export class ModelService {
+export class ModelService implements OnApplicationBootstrap {
   constructor(@InjectModel('Mdel') private modModel: Model<MdelDocument>) {}
+
+  async onApplicationBootstrap() {
+    const count = await this.modModel.estimatedDocumentCount();
+    if (count > 0) return;
+
+    await this.modModel.insertMany(CATEGORIAS_INDEX);
+  }
 
   async findAll(): Promise<Mdel[]> {
     return this.modModel.find({ status: true });

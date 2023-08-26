@@ -11,6 +11,12 @@ export class Product {
   @Prop({ trim: true, uppercase: true, required: true, unique: true })
   cod_internal: string;
 
+  @Prop({ trim: true, uppercase: true })
+  cod_barra?: string;
+
+  @Prop({ trim: true, uppercase: true })
+  nroSerie?: string;
+
   @Prop({ trim: true, uppercase: true, required: true })
   name: string;
 
@@ -56,6 +62,21 @@ export class Product {
 
   @Prop({ trim: true })
   fecVen: Date;
+
+  @Prop({ trim: true })
+  fecInicioUso?: Date;
+
+  @Prop({ trim: true })
+  fecAquision?: Date;
+
+  @Prop({ trim: true })
+  ubicacionLocal?: string;
+
+  @Prop({ trim: true })
+  areaLocal?: string;
+
+  @Prop({ trim: true })
+  lugarLocal?: string;
 
   @Prop({ trim: true })
   status: boolean;

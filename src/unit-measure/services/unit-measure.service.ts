@@ -2,10 +2,18 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Unit, UnitDocument } from '../schemas/unit.schema';
+import { UNIDADES_INDEX } from 'src/lib/const/consts';
 
 @Injectable()
 export class UnitMeasureService {
   constructor(@InjectModel('Unit') private unitModel: Model<UnitDocument>) {}
+
+  async onApplicationBootstrap() {
+    const count = await this.unitModel.estimatedDocumentCount();
+    if (count > 0) return;
+
+    await this.unitModel.insertMany(UNIDADES_INDEX);
+  }
 
   async findAll(): Promise<Unit[]> {
     return this.unitModel.find({ status: true });

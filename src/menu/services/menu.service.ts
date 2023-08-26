@@ -51,9 +51,9 @@ export class MenuService implements OnModuleInit {
           link: 'marcas',
         }).save(),
         new this.menuModel({
-          name: 'Categoria',
+          name: 'Modelos',
           status: true,
-          link: 'categorias',
+          link: 'modelos',
         }).save(),
         new this.menuModel({
           name: 'Unidad de medida',

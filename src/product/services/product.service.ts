@@ -118,7 +118,7 @@ export class ProductService {
           {
             status: HttpStatus.CONFLICT,
             type: 'UNIQUE',
-            message: 'El Cod. de barra y/o interno ya existe.',
+            message: 'El Cod. interno interno ya existe.',
           },
           HttpStatus.CONFLICT,
         );

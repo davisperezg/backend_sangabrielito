@@ -1,11 +1,24 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  OnApplicationBootstrap,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Mark, MarkDocument } from '../schemas/mark.schemas';
+import { MARCAS_INDEX } from 'src/lib/const/consts';
 
 @Injectable()
-export class MarkService {
+export class MarkService implements OnApplicationBootstrap {
   constructor(@InjectModel('Mark') private markModel: Model<MarkDocument>) {}
+
+  async onApplicationBootstrap() {
+    const count = await this.markModel.estimatedDocumentCount();
+    if (count > 0) return;
+
+    await this.markModel.insertMany(MARCAS_INDEX);
+  }
 
   async findAll(): Promise<Mark[]> {
     return this.markModel.find({ status: true });
