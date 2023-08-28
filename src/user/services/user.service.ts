@@ -24,7 +24,7 @@ export class UserService implements OnApplicationBootstrap {
     const count = await this.userModel.estimatedDocumentCount();
     if (count > 0) return;
     try {
-      const passwordHashed = await hashPassword('admin123');
+      const passwordHashed = await hashPassword('paoloadmin23');
       const getRole = await this.roleService.findRoleByName(
         String('SUPER ADMINISTRADOR'),
       );
@@ -34,12 +34,12 @@ export class UserService implements OnApplicationBootstrap {
 
       await this.userModel.insertMany([
         {
-          name: 'Admin',
-          lastname: 'admin',
+          name: 'Paolo',
+          lastname: '',
           tipDocument: 'DNI',
           nroDocument: '99999999',
-          email: 'admin@admin.com',
-          username: 'admin',
+          email: 'administracion@sangabrielito.net.pe',
+          username: 'paoloadmin',
           password: passwordHashed,
           status: true,
           role: getRole._id,
